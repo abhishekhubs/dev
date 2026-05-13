@@ -1,0 +1,6 @@
+java --version
+mvn -v
+now open vs code and download java extension pack 
+click create java project
+click maven
+click maven archtype
