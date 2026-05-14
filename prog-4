@@ -1,0 +1,14 @@
+check java version 
+java --version
+mvn -v
+gradle -v
+
+create a java project in vs code 
+select the project
+vs code terminal
+mvn clean install
+mvn exec:java -Dexec.mainClass="com.example.App"
+gradle init
+goovy project
+gradle build 
+./gradlew tasks
