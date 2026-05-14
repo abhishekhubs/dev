@@ -1,0 +1,19 @@
+sudo apt update
+sudo apt install openjdk21-jdk -y
+java version
+
+add jenkins repo
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+sudo sh -c 'echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+
+install jenkins
+sudo apt update
+sudo apt install jenkins -y
+sudo systemctl status jenkins
+sudo ufw allow 8080
+sudo ufw status
+sudo ufw enable
+sudo ufw status
+
+http://localhost:8080
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
