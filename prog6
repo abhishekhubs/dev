@@ -1,0 +1,48 @@
+java --version
+mvn -v
+downlaod git
+vs code
+create java project
+
+open folder
+
+chrome driver downlaod 
+chrome setting
+help
+downlaod chrome driver
+copy chrome driver
+paste in demo
+
+login to github
+ create a repo
+ push code
+
+open jenkisn
+manage jenkins
+tools
+save
+credintails
+
+add credentials
+
+ new item
+  prog6
+  free style project
+  ok
+
+build step '
+
+ copy path from vs code
+ mvn test 
+ build now
+
+
+ or 
+
+ new item 
+ free style project
+ soucre code git url
+  build 
+  mvn test
+  build now
+  
