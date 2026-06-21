@@ -8,7 +8,18 @@ select the project
 vs code terminal
 mvn clean install
 mvn exec:java -Dexec.mainClass="com.example.App"
+
 gradle init
+
+task run(type: JavaExec) {
+    main = 'com.example.App'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+
+gradlew build
+
+gradlew run
 goovy project
 gradle build 
 ./gradlew tasks
