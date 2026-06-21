@@ -1,0 +1,29 @@
+create a microsoft account
+   account.microsoft.com
+   sign up by usign mail id
+   set password
+   enter your name, and asked details
+
+go to azure devops orgainzation
+   dev.azure.com
+   sign in by using microsoft account
+   search azure devops organization
+   enter your details like name, mail, country
+   click ok 
+   go to setting
+   go to policies and allow all policies
+
+open vs code
+  create a java project
+  open project in vs code
+login to github 
+create a repo 
+push your code in github
+
+ go to azure
+ create a new project
+ choose public 
+ click pipeline and choose github 
+ select your repo from github
+ save and run your project
+  
