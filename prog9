@@ -1,0 +1,20 @@
+create a microsoft accoount
+ https://account.microsoft.com
+ sign up by using mail id
+ verify your account
+ enter your name and asked details
+
+go to azure devops portal
+ https://dev.azure.com
+ sign in by using your microsoft account
+
+ search azure devops organization
+ enter the asked details like name , email, country
+ click ok
+
+ create a new organzation
+ create a new project
+ project name 
+ choose private
+ click create
+ 
