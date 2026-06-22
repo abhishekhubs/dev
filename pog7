@@ -1,0 +1,139 @@
+Commands:
+
+Step 1: Configure ansible control Nodes
+
+
+1.Create admin-level User:
+sudo adduser ansible
+
+2.define a strong account password
+
+3.Assign super user privileges:
+sudo usermod -aG sudo ansible
+
+4.switch to newly created user:
+sudo su ansible
+Step 2:set up an SSh key pair
+
+1.Enter the following command in ansible control node:
+ssh-keygen
+
+2.When prompted for passphrase press ENTER
+
+
+step 3:Configure an ansible host:
+
+1. To know your local IP address:
+hostname -i
+
+2. to copy the public key to a host;
+
+ssh-copy-id ansible@[remote-host]
+
+3. type yes and hit ENTER when asked for connection
+
+
+Step 4:Install ansible
+
+1.Update system
+
+sudo apt update
+ 
+2. To install on ubuntu:
+
+sudo apt install ansible -y 
+
+step5:verify installation
+
+ansible --version
+
+step 6:set up inventory file
+
+1. create ansible subdirectory
+sudo mkdir -p /etc/ansible
+
+2. use nano to create a file named hosts
+sudo nano /etc/ansible/hosts
+
+3. Add the following:
+[local]
+localhost ansible_connection=local
+
+4. save and exit
+5.check the items in the inventory
+ansible-inventory --list -y
+
+step 7:Test the connection
+
+sudo ansible all -m ping
+
+
+
+### 2. Installation (on Ubuntu/Debian)
+```bash
+sudo apt update
+sudo apt install ansible
+ansible --version   # Verify installation
+```
+
+### 3. YAML Basics (Important for Playbooks)
+- Use **spaces** (never tabs) for indentation.
+- Lists start with `-`.
+- Proper alignment/indentation matters.
+
+### 4. First Playbook: Create a File (`create_file.yml`)
+```yaml
+---
+- name: Create a sample file
+  hosts: localhost
+  tasks:
+    - name: Create hello.txt
+      copy:
+        content: "Hello from Ansible!"
+        dest: /tmp/hello.txt
+```
+
+**Run it:**
+```bash
+ansible-playbook create_file.yml
+```
+Check: `cat /tmp/hello.txt`
+
+### 5. Second Playbook: Install a Package (nginx) (`install_nginx.yml`)
+```yaml
+---
+- name: Install nginx web server
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+```
+
+**Run it:**
+```bash
+ansible-playbook install_nginx.yml
+```
+Verify: `systemctl status nginx`
+
+### 6. Loops Example: Install Multiple Packages
+Use `loop` (or `with_items`) to install several packages at once (e.g., git, tree, unzip).
+
+### 7. Variables Example (`variables.yml`)
+```yaml
+---
+- name: Install package using variables
+  hosts: localhost
+  become: yes
+  vars:
+    package_name: curl
+  tasks:
+    - name: Install {{ package_name }}
+      apt:
+        name: "{{ package_name }}"
+        state: present
+```
+
+This makes playbooks reusable.
