@@ -1,0 +1,212 @@
+**Video Title:** DevOps Simplified: Jenkins CI Pipeline + Ansible Deployment for Maven Projects🚀 | Step-by-Step Guide  
+**Channel:** ASK-DEV
+
+This is a hands-on DevOps tutorial showing how to set up a **Jenkins CI pipeline** for a Maven Java project and then use **Ansible** to automatically deploy the built artifact (JAR file).
+
+Here are the **step-by-step instructions** based on the pinned comment in the video:
+
+### Step 1: Create a Simple Maven Project
+```bash
+mkdir ~/java-maven-app
+cd ~/java-maven-app
+```
+Use your IDE (e.g., VS Code with Java/Maven extensions) to create a Maven project inside this folder.
+
+### Step 2: Jenkins Job to Build the Maven Project (Freestyle Job)
+1. Go to **Jenkins Dashboard → New Item**
+2. Give your project a name (e.g., `Build-Maven-Project`)
+3. Select **Freestyle project** → OK
+4. In the job configuration:
+   - **Build Environment**: Check **"Delete workspace before build starts"**
+   - **Build** section → Add build step → **Execute shell**
+     ```bash
+     cp -r /home/user/java-maven-app/myapp .
+     cd myapp
+     mvn clean package
+     ```
+   - **Post-build Actions** → Add post-build action → **Archive the artifacts**
+     - Files to archive: `myapp/target/*.jar`
+
+5. Save and click **Build Now**
+6. Verify:
+   - Build succeeds
+   - Artifact (`myapp-1.0-SNAPSHOT.jar`) is generated and archived
+
+### Step 3: Set Up Ansible for Deployment
+
+#### 3.1 Create Inventory File
+```bash
+mkdir ~/ansible
+cd ~/ansible
+nano inventory.ini
+```
+
+Add the following content:
+```ini
+[appserver]
+localhost ansible_connection=local
+```
+
+#### 3.2 Create Ansible Playbook (`deploy.yml`)
+```bash
+nano deploy.yml
+```
+
+Add:
+```yaml
+---
+- name: Deploy Java App
+  hosts: appserver
+  become: yes
+  tasks:
+    - name: Create deploy directory
+      file:
+        path: /opt/myapp/
+        state: directory
+        mode: '0755'
+
+    - name: Copy JAR file to target
+      copy:
+        src: /var/lib/jenkins/workspace/Build-Maven-Project/myapp/target/myapp-1.0-SNAPSHOT.jar
+        dest: /opt/myapp/myapp.jar
+        mode: '0755'
+
+    - name: (Optional) Run the app
+      shell: java -jar /opt/myapp/myapp.jar
+      async: 0
+      poll: 0
+      ignore_errors: true
+```
+
+### Step 4: Give Jenkins Permission to Run Ansible
+```bash
+sudo visudo
+```
+
+Add this line:
+```
+jenkins ALL=(ALL) NOPASSWD: ALL
+```
+
+### Step 5: Add Ansible Execution to Jenkins Job
+1. Go back to your Jenkins job → **Configure**
+2. **Build** section → Add build step → **Execute shell**
+3. Paste:
+   ```bash
+   ansible-playbook -i /home/user/ansible/inventory.ini /home/user/ansible/deploy.yml
+   ```
+4. Save and click **Build Now**
+
+**Expected Result:** Build succeeds and you should see output indicating the JAR was successfully copied to `/opt/myapp/`.
+
+---
+
+This creates a basic **CI + simple CD** pipeline: Jenkins builds the Maven project → Ansible deploys the JAR to the target server (here, localhost for demo).
+
+**Tips from the video description:**
+- Tools: Jenkins, Maven, Ansible
+- Great for learning real-world DevOps workflows
+
+Would you like me to expand on any part (e.g., how to make it a full Pipeline script, handle remote servers, add tests, etc.)?
+
+
+
+Follow the steps and commands here:
+
+Step 1: create a simple Maven project
+mkdir ~/java-maven-app
+cd ~/java-maven-app
+
+then use java extension package to create Maven project in it.
+
+Step 2: Jenkins Job to Build Maven Project
+i. Go to Jenkins Dashboard > New Item
+ii. Name your project
+ii. select Freestyle project
+iv. In Configuration:
+    Build Environment: Check "Delete workspace before build starts"
+    Add build step → Select "Execute shell".
+    cp -r /home/user/java-maven-app/myapp .
+    cd myapp
+    mvn clean package
+
+
+vi.Post-build action:
+    Add post-build step → "Archive the artifacts"
+    Files to archive: myapp/target/*.jar
+
+
+v.Go to the project > Click Build Now
+    Confirm:
+    Build succeeds
+    myapp-1.0-SNAPSHOT.jar is copied to ~/jenkins-artifacts/
+    
+Step 3:Ansible Inventory File
+
+i. Create this file (e.g., /home/user/ansible/inventory.ini):
+mkdir ansible
+
+cd ansible
+
+nano inventory.ini
+
+
+add:
+[appserver]
+localhost ansible_connection=local
+
+ii. Ansible Playbook (deploy.yml) :
+
+cd /home/user/ansible
+
+nano deploy.yml
+ 
+add the following:
+
+---
+- name: Deploy Java App
+  hosts: appserver
+  become: yes
+  tasks:
+    - name: Create deploy directory
+      file:
+        path: /opt/myapp/
+        state: directory
+        mode: '0755'
+
+    - name: Copy JAR file to target
+      copy:
+        src: /var/lib/jenkins/workspace/Build-Maven-Project/myapp/target/myapp-1.0-SNAPSHOT.jar
+        dest: /opt/myapp/myapp.jar
+        mode: '0755'
+
+    - name: (Optional) Run the app
+      shell: java -jar /opt/myapp/myapp.jar
+      async: 0
+      poll: 0
+      ignore_errors: true
+
+iii. Give Jenkins Permission to Run Ansible
+
+Allow Jenkins to run Ansible without password:
+
+sudo visudo
+
+Add:
+
+jenkins ALL=(ALL) NOPASSWD: ALL
+
+iv. Add Build steps in Jenkins
+
+    Go to your Jenkins job → Configure.
+
+    Click Add build steps→ Execute shell.
+
+    Paste this:
+
+ansible-playbook -i /home/user/ansible/inventory.ini /home/user/ansible/deploy.yml
+
+v. click build now again
+Build succesful
+you should see message similar to:
+JAR is successfully copied (deployed)
